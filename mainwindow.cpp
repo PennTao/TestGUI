@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new MyGraphicsScene();
     canvas->setScene(scene);
-    item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg"));
+    item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
     scene->addItem(item);
 
     connect(GroupOne,SIGNAL(clicked()),canvas, SLOT(DrawRect()));

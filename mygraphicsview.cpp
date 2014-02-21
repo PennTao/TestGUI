@@ -23,7 +23,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *e)
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
 {
+
     qDebug() << "release at  X: "<<e->pos().x() <<"    Y:" << e->pos().y();
+    qDebug() <<this->rect().x()<<"  "<<this->rect().y()<<"  "<<this->rect().height()<<" "<<this->rect().width();
+    qDebug() << "SceneRect: "<<this->scene()->sceneRect().x()<<"    "<<this->scene()->sceneRect().y()<<"    "<<this->scene()->sceneRect().height()<<"   "<<this->scene()->sceneRect().width();
     if(bMouseClick && (m_lastPos == e->pos()) && bGroupRect)
     {
        // qDebug() << "click in MyGraphicsView";
@@ -102,7 +105,7 @@ void MyGraphicsView::DrawRect()
     scene = this->scene();
 
     scene->clear();
-    scene->addPixmap(QPixmap("/home/tao/Desktop/panda_AP.jpg"));
+    scene->addPixmap(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
     scene->addRect(rects[0],QPen(QColor(255,0,0),6));
     scene->addRect(rects[1],QPen(QColor(255,0,0),6));
 
@@ -117,7 +120,7 @@ void MyGraphicsView::DrawEllipse()
     scene = this->scene();
 
     scene->clear();
-    scene->addPixmap(QPixmap("/home/tao/Desktop/panda_AP.jpg"));
+    scene->addPixmap(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
     scene->addEllipse(ellipses[0],QPen(QColor(255,0,0),6));
     scene->addEllipse(ellipses[1],QPen(QColor(255,0,0),6));
 }
