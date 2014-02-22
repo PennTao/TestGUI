@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QMouseEvent>
 #include <vector>
+#include "socketcomm.h"
 #include "mygraphicsscene.h"
 using namespace std;
 class MyGraphicsView : public QGraphicsView
@@ -33,13 +34,15 @@ protected:
     void mouseMoveEvent(QMouseEvent *e);
 
 private:
-    bool bMouseClick;
+    bool bMousePress;
     bool bGroupRect;
     bool bGroupEllipse;
-
+    QPixmap *background;
     QPoint m_lastPos;
     vector<QRect> rects;
     vector<QRect> ellipses;
+    QTcpSocket * socket;
+    SocketComm* client;
 };
 
 #endif // MYGRAPHICSVIEW_H
