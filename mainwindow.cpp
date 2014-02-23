@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(GroupOne,SIGNAL(clicked()),canvas, SLOT(DrawRect()));
     connect(GroupTwo,SIGNAL(clicked()),canvas, SLOT(DrawEllipse()));
   //  connect(GroupThree,SIGNAL(clicked()),canvas, SLOT(DrawAll()));
-    connect(canvas, SIGNAL(mouseClickEvent(vector<QRect>)), canvas, SLOT(clickHandler(vector<QRect>)));
+    connect(canvas, SIGNAL(mouseClickEvent(vector<pair<QRect,QString>>)), canvas, SLOT(clickHandler(vector<pair<QRect,QString>>)));
     ui->top_Hlayout->addWidget(canvas);
 //    ui->horizontalLayout->addWidget(canvas);
 

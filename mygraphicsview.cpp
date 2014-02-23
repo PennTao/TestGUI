@@ -6,8 +6,8 @@ MyGraphicsView::MyGraphicsView(QWidget *parent) :
     background = new QPixmap("/home/tao/Desktop/test.jpg");
     bGroupEllipse = false;
     bGroupRect = false;
-    rects.push_back(make_pair(QRect(50,362,120,100),QString("High heel shoes")));
-    rects.push_back(make_pair(QRect(313,331,180,100),QString("Hand Bag")));
+    rects.push_back(make_pair(QRect(50,362,120,100),QString("High-heel shoes")));
+    rects.push_back(make_pair(QRect(313,331,180,100),QString("Handbag")));
     ellipses.push_back(make_pair(QRect(553,200,150,280),QString("iPhone")));
    // ellipses.push_back(QRect(684,205,80,170));
     QWidget::setMouseTracking(true);
