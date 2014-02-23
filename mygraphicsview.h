@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QMouseEvent>
 #include <vector>
+#include <utility>
 #include "socketcomm.h"
 #include "mygraphicsscene.h"
 using namespace std;
@@ -14,17 +15,18 @@ class MyGraphicsView : public QGraphicsView
     Q_OBJECT
 
 signals:
-    void mouseClickEvent(vector<QRect>);
+    void mouseClickEvent(vector< pair<QRect, QString> >);
 
 public slots:
-    void clickHandler(vector<QRect> rects);
+    void clickHandler(vector< pair<QRect, QString> > rects);
     void DrawRect();
     void DrawEllipse();
+    void DrawAll();
 
 public:
     explicit MyGraphicsView(QWidget *parent = 0);
-    vector<QRect> getRects();
-    vector<QRect> getEllipses();
+    vector< pair<QRect, QString> > getRects();
+    vector< pair<QRect, QString> > getEllipses();
     void setRect(bool);
     void setEllipse(bool);
 
@@ -39,10 +41,12 @@ private:
     bool bGroupEllipse;
     QPixmap *background;
     QPoint m_lastPos;
-    vector<QRect> rects;
-    vector<QRect> ellipses;
+    vector< pair<QRect, QString> > rects;
+    vector< pair<QRect, QString> > ellipses;
     QTcpSocket * socket;
     SocketComm* client;
+
+
 };
 
 #endif // MYGRAPHICSVIEW_H

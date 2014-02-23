@@ -22,11 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new MyGraphicsScene();
     canvas->setScene(scene);
-    item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
-    scene->addItem(item);
+  //  item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
+    scene->addPixmap(QPixmap("/home/tao/Desktop/test.jpg").scaled(this->width(),this->height()));
 
     connect(GroupOne,SIGNAL(clicked()),canvas, SLOT(DrawRect()));
     connect(GroupTwo,SIGNAL(clicked()),canvas, SLOT(DrawEllipse()));
+  //  connect(GroupThree,SIGNAL(clicked()),canvas, SLOT(DrawAll()));
     connect(canvas, SIGNAL(mouseClickEvent(vector<QRect>)), canvas, SLOT(clickHandler(vector<QRect>)));
     ui->top_Hlayout->addWidget(canvas);
 //    ui->horizontalLayout->addWidget(canvas);

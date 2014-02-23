@@ -3,13 +3,13 @@
 MyGraphicsView::MyGraphicsView(QWidget *parent) :
     QGraphicsView(parent)
 {
-    background = new QPixmap("/home/tao/Desktop/panda_AP.jpg");
+    background = new QPixmap("/home/tao/Desktop/test.jpg");
     bGroupEllipse = false;
     bGroupRect = false;
-    rects.push_back(QRect(584,405,100,70));
-    rects.push_back(QRect(150,168,60,150));
-    ellipses.push_back(QRect(384,305,90,80));
-    ellipses.push_back(QRect(684,205,80,170));
+    rects.push_back(make_pair(QRect(50,362,120,100),QString("High heel shoes")));
+    rects.push_back(make_pair(QRect(313,331,180,100),QString("Hand Bag")));
+    ellipses.push_back(make_pair(QRect(553,200,150,280),QString("iPhone")));
+   // ellipses.push_back(QRect(684,205,80,170));
     QWidget::setMouseTracking(true);
     client = new SocketComm();
     client->connectToServer("127.0.0.1", 1234);
@@ -27,10 +27,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *e)
     {
         for(uint i = 0; i < rects.size(); i++)
         {
-            curRect = rects[i];
+            curRect = rects[i].first;
             if(curRect.contains(m_lastPos))
             {
-                scene->addRect(rects[i],QPen(QColor(0,255,0),6));
+                scene->addRect(rects[i].first,QPen(QColor(0,255,0),6));
             }
         }
     }
@@ -38,10 +38,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *e)
     {
         for(uint i = 0; i < ellipses.size(); i++)
         {
-            curRect = ellipses[i];
+            curRect = ellipses[i].first;
             if(curRect.contains(m_lastPos))
             {
-                scene->addEllipse(ellipses[i],QPen(QColor(0,255,0),6));
+                scene->addEllipse(ellipses[i].first,QPen(QColor(0,255,0),6));
             }
         }
     }
@@ -64,11 +64,11 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
         bMousePress = false;
         for(uint i = 0; i < rects.size(); i++)
         {
-            curRect = rects[i];
+            curRect = rects[i].first;
             scene = this->scene();
             if(curRect.contains(e->pos()))
             {
-                scene->addRect(rects[i],QPen(QColor(255,255,0),6));
+                scene->addRect(rects[i].first,QPen(QColor(255,255,0),6));
             }
         }
         if(m_lastPos == e->pos())
@@ -81,11 +81,11 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
         bMousePress = false;
         for(uint i = 0; i < ellipses.size(); i++)
         {
-            curRect = ellipses[i];
+            curRect = ellipses[i].first;
             scene = this->scene();
             if(curRect.contains(e->pos()))
             {
-                scene->addEllipse(ellipses[i],QPen(QColor(255,255,0),6));
+                scene->addEllipse(ellipses[i].first,QPen(QColor(255,255,0),6));
             }
         }
         if(m_lastPos == e->pos() )
@@ -93,18 +93,19 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
 
     }
 }
-void MyGraphicsView::clickHandler(vector<QRect> rects)
+void MyGraphicsView::clickHandler(vector< pair<QRect, QString> > rects)
 {
 
     QRect curRect;
-    QString test;
-    test = "TV";
+    QString curStr;
+
     for(uint i = 0; i < rects.size(); i++)
     {
-        curRect = rects[i];
+        curRect = rects[i].first;
+        curStr = rects[i].second;
         if(curRect.contains(m_lastPos))
         {
-            client->sendToServer(test);
+            client->sendToServer(curStr);
             qDebug() <<"click in ROI";
         }
     }
@@ -115,33 +116,63 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *e)
   //  qDebug() << "mouse pos"<<e->pos().x()<<"    "<<e->pos().y();
     QRect curRect;
     QGraphicsScene *scene;
+
     if(bGroupRect && !bMousePress)
     {
-        DrawRect();
+
+        if(!bGroupEllipse)
+            DrawRect();
         for(uint i = 0; i < rects.size(); i++)
         {
-            curRect = rects[i];
+            curRect = rects[i].first;
             scene = this->scene();
             if(curRect.contains(e->pos()))
             {
-                scene->addRect(rects[i],QPen(QColor(255,255,0),6));
+                scene->addRect(rects[i].first,QPen(QColor(255,255,0),6));
                 qDebug() <<"in rect "<<i<<" mouse pos"<<e->pos().x()<<"    "<<e->pos().y();
             }
         }
     }
     if(bGroupEllipse && !bMousePress)
     {
-        DrawEllipse();
+        if(!bGroupRect)
+            DrawEllipse();
         for(uint i = 0; i < ellipses.size(); i++)
         {
-            curRect = ellipses[i];
+            curRect = ellipses[i].first;
             scene = this->scene();
             if(curRect.contains(e->pos()))
             {
-                scene->addEllipse(ellipses[i],QPen(QColor(255,255,0),6));
+                scene->addEllipse(ellipses[i].first,QPen(QColor(255,255,0),6));
                 qDebug() <<"in ellipse "<<i<<" mouse pos"<<e->pos().x()<<"    "<<e->pos().y();
             }
         }
+    }
+    if(bGroupRect && bGroupEllipse && !bMousePress)
+    {
+        DrawAll();
+        scene = this->scene();
+        for(uint i = 0; i < rects.size(); i++)
+        {
+            curRect = rects[i].first;
+
+            if(curRect.contains(e->pos()))
+            {
+                scene->addRect(rects[i].first,QPen(QColor(255,255,0),6));
+                qDebug() <<"in rect "<<i<<" mouse pos"<<e->pos().x()<<"    "<<e->pos().y();
+            }
+        }
+        for(uint i = 0; i < ellipses.size(); i++)
+        {
+            curRect = ellipses[i].first;
+
+            if(curRect.contains(e->pos()))
+            {
+                scene->addEllipse(ellipses[i].first,QPen(QColor(255,255,0),6));
+                qDebug() <<"in ellipse "<<i<<" mouse pos"<<e->pos().x()<<"    "<<e->pos().y();
+            }
+        }
+
     }
 }
 void MyGraphicsView::setRect(bool val)
@@ -152,6 +183,9 @@ void MyGraphicsView::setEllipse(bool val)
 {
     bGroupEllipse = val;
 }
+
+
+
 void MyGraphicsView::DrawRect()
 {
     QGraphicsScene *scene;
@@ -162,8 +196,11 @@ void MyGraphicsView::DrawRect()
 
     scene->clear();
     scene->addPixmap(background->scaled(this->width(),this->height()));
-    scene->addRect(rects[0],QPen(QColor(255,0,0),6));
-    scene->addRect(rects[1],QPen(QColor(255,0,0),6));
+    for(uint i = 0; i < rects.size(); i++)
+    {
+        scene->addRect(rects[i].first,QPen(QColor(255,0,0),6));
+    }
+
 
 }
 
@@ -177,14 +214,36 @@ void MyGraphicsView::DrawEllipse()
 
     scene->clear();
     scene->addPixmap(background->scaled(this->width(),this->height()));
-    scene->addEllipse(ellipses[0],QPen(QColor(255,0,0),6));
-    scene->addEllipse(ellipses[1],QPen(QColor(255,0,0),6));
+    for(uint i = 0; i < ellipses.size(); i++)
+    {
+        scene->addEllipse(ellipses[i].first,QPen(QColor(255,0,0),6));
+    }
 }
-vector<QRect> MyGraphicsView::getRects()
+
+void MyGraphicsView::DrawAll()
+{
+    QGraphicsScene *scene;
+    this->setRect(true);
+    this->setEllipse(true);
+    scene = this->scene();
+
+    scene->clear();
+    scene->addPixmap(background->scaled(this->width(),this->height()));
+    for(uint i = 0 ; i < rects.size();i++)
+    {
+        scene->addRect(rects[i].first,QPen(QColor(255,0,0),6));
+    }
+    for(uint i = 0 ; i < ellipses.size();i++)
+    {
+        scene->addEllipse(ellipses[i].first,QPen(QColor(255,0,0),6));
+    }
+}
+
+vector< pair<QRect, QString> > MyGraphicsView::getRects()
 {
     return rects;
 }
-vector<QRect> MyGraphicsView::getEllipses()
+vector< pair<QRect, QString> > MyGraphicsView::getEllipses()
 {
     return ellipses;
 }

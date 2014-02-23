@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <vector>
 #include  <QWidget>
+#include  <QPushButton>
 #include "mygraphicsview.h"
 #include "mygraphicsscene.h"
 using namespace std;
