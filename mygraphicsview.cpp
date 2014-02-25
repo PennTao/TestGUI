@@ -3,7 +3,7 @@
 MyGraphicsView::MyGraphicsView(QWidget *parent) :
     QGraphicsView(parent)
 {
-    background = new QPixmap("/home/tao/Desktop/test.jpg");
+    background = new QPixmap("/home/tao/Desktop/background.png");
     bGroupEllipse = false;
     bGroupRect = false;
     rects.push_back(make_pair(QRect(50,362,120,100),QString("High-heel shoes")));
@@ -11,7 +11,7 @@ MyGraphicsView::MyGraphicsView(QWidget *parent) :
     ellipses.push_back(make_pair(QRect(553,200,150,280),QString("iPhone")));
    // ellipses.push_back(QRect(684,205,80,170));
     QWidget::setMouseTracking(true);
-    client = new SocketComm();
+    client = new SocketComm(); 
     client->connectToServer("127.0.0.1", 1234);
 
 }
@@ -50,7 +50,6 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *e)
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
 {
-
     qDebug() << "release at  X: "<<e->pos().x() <<"    Y:" << e->pos().y();
     qDebug() << "View Rect: "<<this->rect().x()<<"  "<<this->rect().y()<<"  "<<this->rect().height()<<" "<<this->rect().width();
     qDebug() << "SceneRect: "<<this->scene()->sceneRect().x()<<"    "<<this->scene()->sceneRect().y()<<"    "<<this->scene()->sceneRect().height()<<"   "<<this->scene()->sceneRect().width();
@@ -189,13 +188,15 @@ void MyGraphicsView::setEllipse(bool val)
 void MyGraphicsView::DrawRect()
 {
     QGraphicsScene *scene;
-
+    QRectF area;
     this->setRect(true);
     this->setEllipse(false);
     scene = this->scene();
+    area = scene->sceneRect();
 
     scene->clear();
-    scene->addPixmap(background->scaled(this->width(),this->height()));
+    scene->setSceneRect(area);
+  //  scene->addPixmap(background->scaled(this->width(),this->height()));
     for(uint i = 0; i < rects.size(); i++)
     {
         scene->addRect(rects[i].first,QPen(QColor(255,0,0),6));
@@ -213,7 +214,7 @@ void MyGraphicsView::DrawEllipse()
     scene = this->scene();
 
     scene->clear();
-    scene->addPixmap(background->scaled(this->width(),this->height()));
+ //   scene->addPixmap(background->scaled(this->width(),this->height()));
     for(uint i = 0; i < ellipses.size(); i++)
     {
         scene->addEllipse(ellipses[i].first,QPen(QColor(255,0,0),6));
@@ -228,7 +229,7 @@ void MyGraphicsView::DrawAll()
     scene = this->scene();
 
     scene->clear();
-    scene->addPixmap(background->scaled(this->width(),this->height()));
+ //   scene->addPixmap(background->scaled(this->width(),this->height()));
     for(uint i = 0 ; i < rects.size();i++)
     {
         scene->addRect(rects[i].first,QPen(QColor(255,0,0),6));

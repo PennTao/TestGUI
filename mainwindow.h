@@ -8,6 +8,9 @@
 #include  <QPushButton>
 #include "mygraphicsview.h"
 #include "mygraphicsscene.h"
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
+
 using namespace std;
 namespace Ui {
 class MainWindow;
@@ -20,8 +23,15 @@ class MainWindow : public QMainWindow
 
 private:
 
-    MyGraphicsView *canvas;
+    QGraphicsView *canvas;
+    MyGraphicsView *cover;
     MyGraphicsScene *scene;
+    MyGraphicsScene *cover_scene;
+    QMediaPlayer *player;
+    QGraphicsVideoItem *videoItem;
+
+    QPixmap *bgd;
+
     QGraphicsPixmapItem *item;
     vector <QRect> channelRect;
 
@@ -32,7 +42,7 @@ protected:
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-
+    void resizeEvent(QResizeEvent* event);
     ~MainWindow();
 
 
