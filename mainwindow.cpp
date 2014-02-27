@@ -32,16 +32,23 @@ MainWindow::MainWindow(QWidget *parent) :
     videoItem->setSize(QSize(this->width(),this->height()));
     scene->addItem(videoItem);
 
-    cover_scene->addRect(this->x(),this->y(),this->width(),this->height(),QPen(QColor(255,0,0),6));
+ //   cover_scene->addRect(this->x(),this->y(),this->width(),this->height(),QPen(QColor(255,0,0),6));
  //  canvas->setGeometry(videoWidget->geometry());
     canvas->setScene(scene);
+    canvas->setFrameStyle( QFrame::NoFrame );
+    canvas->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    canvas->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
     cover->setScene(cover_scene);
+    cover->setFrameStyle( QFrame::NoFrame );
+    cover->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    cover->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+
 
     cover->setSceneRect(scene->sceneRect());
     player->play();
     cover->setBackgroundRole( QPalette::Window );
-    cover->setStyleSheet("background-color: rgba(200,200,200,70)");
+    cover->setStyleSheet("background:transparent");
     cover->setAttribute(Qt::WA_TranslucentBackground);
   //  item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
   //  cover_scene->addPixmap(QPixmap("/home/tao/TestGUI/background.png").scaled(this->width(),this->height()));
@@ -63,10 +70,10 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     videoItem->setSize(QSize(this->width(),this->height()));
-    cover_scene->setSceneRect(scene->sceneRect());
-    cover->setBaseSize(canvas->size());
-    cover_scene->addRect(cover_scene->sceneRect(),QPen(QColor(0,255,0),8));
-    scene->addRect(scene->sceneRect(),QPen(QColor(255,255,0),8));
+//    cover_scene->setSceneRect(scene->sceneRect());
+//    cover->setBaseSize(canvas->size());
+//    cover_scene->addRect(cover_scene->sceneRect(),QPen(QColor(0,255,0),8));
+//    scene->addRect(scene->sceneRect(),QPen(QColor(255,255,0),8));
 }
 /*
 void MainWindow::drawRect()
