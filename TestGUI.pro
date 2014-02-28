@@ -16,12 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     mygraphicsview.cpp \
     mygraphicsscene.cpp \
-    socketcomm.cpp
+    socketcomm.cpp \
+    xmldataparser.cpp \
+    frame.cpp
 
 HEADERS  += mainwindow.h \
     mygraphicsview.h \
     mygraphicsscene.h \
-    socketcomm.h
+    socketcomm.h \
+    xmldataparser.h \
+    frame.h
 
 FORMS    += mainwindow.ui
 
