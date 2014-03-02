@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQueue>
 #include <QMap>
+#include <QDebug>
 class Frame : public QObject
 {
     Q_OBJECT
@@ -14,7 +15,7 @@ private:
 public:
     explicit Frame(QObject *parent = 0);
     void InsertItem(QMap<QString,QString> );
-
+    void DisplayContent();
     QQueue<QMap<QString,QString> >* GetAll();
 signals:
 

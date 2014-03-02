@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDebug>
 #include "frame.h"
+
 class XMLDataParser : public QObject
 {
     Q_OBJECT
@@ -20,8 +21,13 @@ private:
 public:
     explicit XMLDataParser(QObject *parent = 0);
     void loadXML(QString filename);
-    Frame* parseFrame(QXmlStreamReader& xml);
+    Frame* parseFrame(QXmlStreamReader& xmlReader);
     void parseXML();
+    QMap<QString, QString> parseItem(QXmlStreamReader& xmlReader);
+    QMap<int, Frame*> GetData()
+    {
+        return dataMap;
+    }
 signals:
 
 public slots:
