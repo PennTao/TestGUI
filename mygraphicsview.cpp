@@ -3,12 +3,17 @@
 MyGraphicsView::MyGraphicsView(QWidget *parent) :
     QGraphicsView(parent)
 {
-    background = new QPixmap("/home/tao/Desktop/test.jpg");
+
+    backgrounds.push_back(new QPixmap("/home/tao/TestGUI/test1.jpg"));
+    backgrounds.push_back(new QPixmap("/home/tao/TestGUI/test2.jpg"));
+ //   backgrounds.push_back(new QPixmap("/home/tao/TestGUI/test3.jpg"));
+ //   backgrounds.push_back(new QPixmap("/home/tao/TestGUI/test4.jpg"));
+
+
+
     bGroupEllipse = false;
     bGroupRect = false;
-    rects.push_back(make_pair(QRect(50,362,120,100),QString("High-heel shoes")));
-    rects.push_back(make_pair(QRect(313,331,180,100),QString("Handbag")));
-    ellipses.push_back(make_pair(QRect(553,200,150,280),QString("iPhone")));
+    bDrawRect = false;
    // ellipses.push_back(QRect(684,205,80,170));
     QWidget::setMouseTracking(true);
     client = new SocketComm();
@@ -23,7 +28,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *e)
     m_lastPos = e->pos();
     bMousePress = true;
     scene = this->scene();
-    if(bGroupRect)
+ /*   if(bGroupRect)
     {
         for(uint i = 0; i < rects.size(); i++)
         {
@@ -45,7 +50,16 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *e)
             }
         }
     }
+*/
+    for(uint i = 0; i < items.size(); i++)
+    {
+        curRect = toRect(items[i]);
+        if(curRect.contains(m_lastPos) && bDrawRect)
+        {
+             scene->addRect(curRect,QPen(QColor(0,255,0),6));
+        }
 
+    }
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
@@ -58,7 +72,23 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
 
     QRect curRect;
     QGraphicsScene *scene;
-    if(bMousePress &&  bGroupRect)
+    if(bMousePress)
+    {
+        bMousePress = false;
+        for(uint i = 0; i < items.size(); i++)
+        {
+            curRect = toRect(items[i]);
+            scene = this->scene();
+            if(curRect.contains((e->pos())) && bDrawRect)
+            {
+                scene->addRect(curRect,QPen(QColor(255,255,0),6));
+            }
+
+        }
+    }
+    if(m_lastPos == e->pos())
+        emit mouseClickEvent();
+ /*   if(bMousePress &&  bGroupRect)
     {
        // qDebug() << "click in MyGraphicsView";
         bMousePress = false;
@@ -91,18 +121,18 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *e)
         if(m_lastPos == e->pos() )
             emit mouseClickEvent(ellipses);
 
-    }
+    }*/
 }
-void MyGraphicsView::clickHandler(vector< pair<QRect, QString> > rects)
+void MyGraphicsView::clickHandler()
 {
 
     QRect curRect;
     QString curStr;
 
-    for(uint i = 0; i < rects.size(); i++)
+    for(uint i = 0; i < items.size(); i++)
     {
-        curRect = rects[i].first;
-        curStr = rects[i].second;
+        curRect = toRect(items[i]);
+        curStr = items[i]["name"];
         if(curRect.contains(m_lastPos))
         {
             client->sendToServer(curStr);
@@ -111,12 +141,30 @@ void MyGraphicsView::clickHandler(vector< pair<QRect, QString> > rects)
     }
 
 }
+
+void MyGraphicsView::ToggleDrawRect()
+{
+    bDrawRect = !bDrawRect;
+    DrawRect();
+}
 void MyGraphicsView::mouseMoveEvent(QMouseEvent *e)
 {
   //  qDebug() << "mouse pos"<<e->pos().x()<<"    "<<e->pos().y();
     QRect curRect;
     QGraphicsScene *scene;
+    if(!bMousePress)
+        DrawRect();
+    for(uint i = 0; i < items.size(); i++)
+    {
+        curRect = toRect(items[i]);
+        scene = this->scene();
+        if(curRect.contains(e->pos()) && bDrawRect)
+        {
+            scene->addRect(curRect,QPen(QColor(255,255,0),6));
+        }
+    }
 
+/*
     if(bGroupRect && !bMousePress)
     {
 
@@ -173,7 +221,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *e)
             }
         }
 
-    }
+    }*/
 }
 void MyGraphicsView::setRect(bool val)
 {
@@ -185,6 +233,26 @@ void MyGraphicsView::setEllipse(bool val)
 }
 
 
+void MyGraphicsView::ShowNextFrame()
+{
+        qDebug() << "timed up call show";
+    if(itrBackgrounds == backgrounds.end() || itrFramedata == framedata.end())
+        return ;
+    qDebug() << "timed up call show";
+    itrBackgrounds++;
+    itrFramedata++;
+    if(itrBackgrounds == backgrounds.end() || itrFramedata == framedata.end())
+        return ;
+    background = *itrBackgrounds;
+    curFrame = *itrFramedata;
+    items = curFrame->GetAll();
+    QGraphicsScene *scene;
+    scene = this->scene();
+    scene->clear();
+    qDebug() <<"shownextframe clear";
+    scene->addPixmap(background->scaled(this->width(),this->height()));
+
+}
 
 void MyGraphicsView::DrawRect()
 {
@@ -196,14 +264,25 @@ void MyGraphicsView::DrawRect()
 
     scene->clear();
     scene->addPixmap(background->scaled(this->width(),this->height()));
-    for(uint i = 0; i < rects.size(); i++)
+    if(bDrawRect)
     {
-        scene->addRect(rects[i].first,QPen(QColor(255,0,0),6));
+        QGraphicsScene *scene;
+
+        this->setRect(true);
+        this->setEllipse(false);
+        scene = this->scene();
+
+        scene->clear();
+        scene->addPixmap(background->scaled(this->width(),this->height()));
+        for(uint i = 0; i < items.size(); i++)
+        {
+            scene->addRect(toRect(items[i]),QPen(QColor(255,0,0),6));
+        }
     }
 
 
 }
-
+/*DrawEllipse tobe removed*/
 void MyGraphicsView::DrawEllipse()
 {
     QGraphicsScene *scene;
@@ -239,6 +318,30 @@ void MyGraphicsView::DrawAll()
     }
 }
 
+QRect MyGraphicsView::toRect(QMap<QString, QString> item)
+{
+    QString x,y,width,height;
+    x = item["x"];
+    y = item["y"];
+    width = item["width"];
+    height = item["height"];
+    return QRect(x.toInt(), y.toInt(),width.toInt(),height.toInt());
+}
+void MyGraphicsView::setParser(XMLDataParser *a)
+{
+    parser = a;
+    framedata = parser->GetData();
+    itrBackgrounds = backgrounds.begin();
+    itrFramedata = framedata.begin();
+    background = *itrBackgrounds;
+    curFrame = *itrFramedata;
+    items = curFrame->GetAll();
+
+}
+XMLDataParser* MyGraphicsView::getParser()
+{
+    return parser;
+}
 vector< pair<QRect, QString> > MyGraphicsView::getRects()
 {
     return rects;

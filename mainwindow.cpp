@@ -9,26 +9,37 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "start";
 
 
-
-    QPushButton *GroupOne = new QPushButton(tr("Group One"), this);
-    QPushButton *GroupTwo = new QPushButton(tr("Group Two"), this);
-    QPushButton *GroupThree = new QPushButton(tr("Group Three"), this);
+    QPushButton *GroupOne = new QPushButton(tr("DrawRect"), this);
+    QPushButton *GroupTwo = new QPushButton(tr("stop"), this);
+    QPushButton *GroupThree = new QPushButton(tr("start"), this);
     ui->setupUi(this);
     ui->bottom_Hlayout->addWidget(GroupOne);
     ui->bottom_Hlayout->addWidget(GroupTwo);
     ui->bottom_Hlayout->addWidget(GroupThree);
-    canvas = new MyGraphicsView();
 
+    canvas = new MyGraphicsView();
 
     scene = new MyGraphicsScene();
     canvas->setScene(scene);
+
+    xmlparser = new XMLDataParser();
+    xmlparser->loadXML("/home/tao/TestGUI/test.xml");
+    xmlparser->parseXML();
+    canvas->setParser(xmlparser);
+
+    timer = new QTimer(this);
+    timer->setInterval(5000);
+    timer->start();
+    connect(timer, SIGNAL(timeout()), canvas, SLOT(ShowNextFrame()));
   //  item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
     scene->addPixmap(QPixmap("/home/tao/Desktop/test.jpg").scaled(this->width(),this->height()));
 
-    connect(GroupOne,SIGNAL(clicked()),canvas, SLOT(DrawRect()));
-    connect(GroupTwo,SIGNAL(clicked()),canvas, SLOT(DrawEllipse()));
+    connect(GroupOne,SIGNAL(clicked()),canvas, SLOT(ToggleDrawRect()));
+    connect(GroupTwo,SIGNAL(clicked()),timer, SLOT(stop()));
+    connect(GroupThree, SIGNAL(clicked()),timer, SLOT(start()));
   //  connect(GroupThree,SIGNAL(clicked()),canvas, SLOT(DrawAll()));
-    connect(canvas, SIGNAL(mouseClickEvent(vector<pair<QRect,QString>>)), canvas, SLOT(clickHandler(vector<pair<QRect,QString>>)));
+
+    connect(canvas, SIGNAL(mouseClickEvent()), canvas, SLOT(clickHandler()));
     ui->top_Hlayout->addWidget(canvas);
 //    ui->horizontalLayout->addWidget(canvas);
 

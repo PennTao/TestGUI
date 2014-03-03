@@ -8,6 +8,7 @@
 #include  <QPushButton>
 #include "mygraphicsview.h"
 #include "mygraphicsscene.h"
+#include "xmldataparser.h"
 using namespace std;
 namespace Ui {
 class MainWindow;
@@ -24,6 +25,8 @@ private:
     MyGraphicsScene *scene;
     QGraphicsPixmapItem *item;
     vector <QRect> channelRect;
+    XMLDataParser* xmlparser;
+    QTimer *timer;
 
 protected:
 //    void mouseReleaseEvent(QMouseEvent *e);

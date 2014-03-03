@@ -86,3 +86,7 @@ QMap<QString, QString> XMLDataParser::parseItem(QXmlStreamReader &xmlReader)
     return item;
 
 }
+QMap<int, Frame*> XMLDataParser::GetData()
+{
+    return dataMap;
+}

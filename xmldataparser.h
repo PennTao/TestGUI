@@ -24,10 +24,8 @@ public:
     Frame* parseFrame(QXmlStreamReader& xmlReader);
     void parseXML();
     QMap<QString, QString> parseItem(QXmlStreamReader& xmlReader);
-    QMap<int, Frame*> GetData()
-    {
-        return dataMap;
-    }
+    QMap<int, Frame*> GetData();
+
 signals:
 
 public slots:
