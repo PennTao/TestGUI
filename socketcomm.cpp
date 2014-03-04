@@ -7,11 +7,11 @@ SocketComm::SocketComm(QObject *parent) :
 
 void SocketComm::connectToServer(QString host, qint16 port){
     socket = new QTcpSocket();
-
-    socket->connectToHost(host,port);
-    socket->waitForConnected(2000);
+    inStream.setDevice(socket);
     connect(socket,SIGNAL(connected()),this,SLOT(onConnect()),Qt::DirectConnection);
     connect(socket,SIGNAL(disconnected()),this,SLOT(onDisconnect()),Qt::DirectConnection);
+    socket->connectToHost(host,port);
+    socket->waitForConnected(2000);
 
 }
 
@@ -34,4 +34,8 @@ void SocketComm::onConnect()
 void SocketComm::onDisconnect()
 {
     qDebug() << "Disconnected from Server";
+}
+void SocketComm::onReadReady()
+{
+
 }

@@ -8,6 +8,7 @@ class SocketComm : public QObject
     Q_OBJECT
 private:
     QTcpSocket* socket;
+    QDataStream inStream;
 public:
     explicit SocketComm(QObject *parent = 0);
     void connectToServer(QString host, qint16 port);
@@ -19,6 +20,7 @@ signals:
 public slots:
     void onConnect();
     void onDisconnect();
+    void onReadReady();
 
 };
 

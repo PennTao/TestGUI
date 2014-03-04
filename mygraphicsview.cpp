@@ -133,7 +133,7 @@ void MyGraphicsView::clickHandler()
     {
         curRect = toRect(items[i]);
         curStr = items[i]["name"];
-        if(curRect.contains(m_lastPos))
+        if(curRect.contains(m_lastPos) && bDrawRect)
         {
             client->sendToServer(curStr);
             qDebug() <<"click in ROI";
@@ -246,11 +246,7 @@ void MyGraphicsView::ShowNextFrame()
     background = *itrBackgrounds;
     curFrame = *itrFramedata;
     items = curFrame->GetAll();
-    QGraphicsScene *scene;
-    scene = this->scene();
-    scene->clear();
-    qDebug() <<"shownextframe clear";
-    scene->addPixmap(background->scaled(this->width(),this->height()));
+    DrawRect();
 
 }
 
@@ -282,7 +278,46 @@ void MyGraphicsView::DrawRect()
 
 
 }
-/*DrawEllipse tobe removed*/
+
+QRect MyGraphicsView::toRect(QMap<QString, QString> item)
+{
+    QString x,y,width,height;
+    x = item["x"];
+    y = item["y"];
+    width = item["width"];
+    height = item["height"];
+    return QRect(x.toInt(), y.toInt(),width.toInt(),height.toInt());
+}
+
+void MyGraphicsView::setParser(XMLDataParser *a)
+{
+    parser = a;
+    framedata = parser->GetData();
+    itrBackgrounds = backgrounds.begin();
+    itrFramedata = framedata.begin();
+    background = *itrBackgrounds;
+    curFrame = *itrFramedata;
+    items = curFrame->GetAll();
+
+}
+
+XMLDataParser* MyGraphicsView::getParser()
+{
+    return parser;
+}
+
+vector< pair<QRect, QString> > MyGraphicsView::getRects()
+{
+    return rects;
+}
+
+vector< pair<QRect, QString> > MyGraphicsView::getEllipses()
+{
+    return ellipses;
+}
+
+
+/*DrawEllipse to be removed*/
 void MyGraphicsView::DrawEllipse()
 {
     QGraphicsScene *scene;
@@ -298,7 +333,7 @@ void MyGraphicsView::DrawEllipse()
         scene->addEllipse(ellipses[i].first,QPen(QColor(255,0,0),6));
     }
 }
-
+/*DrawAll to be removed*/
 void MyGraphicsView::DrawAll()
 {
     QGraphicsScene *scene;
@@ -318,35 +353,3 @@ void MyGraphicsView::DrawAll()
     }
 }
 
-QRect MyGraphicsView::toRect(QMap<QString, QString> item)
-{
-    QString x,y,width,height;
-    x = item["x"];
-    y = item["y"];
-    width = item["width"];
-    height = item["height"];
-    return QRect(x.toInt(), y.toInt(),width.toInt(),height.toInt());
-}
-void MyGraphicsView::setParser(XMLDataParser *a)
-{
-    parser = a;
-    framedata = parser->GetData();
-    itrBackgrounds = backgrounds.begin();
-    itrFramedata = framedata.begin();
-    background = *itrBackgrounds;
-    curFrame = *itrFramedata;
-    items = curFrame->GetAll();
-
-}
-XMLDataParser* MyGraphicsView::getParser()
-{
-    return parser;
-}
-vector< pair<QRect, QString> > MyGraphicsView::getRects()
-{
-    return rects;
-}
-vector< pair<QRect, QString> > MyGraphicsView::getEllipses()
-{
-    return ellipses;
-}

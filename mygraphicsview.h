@@ -23,7 +23,9 @@ public slots:
     void clickHandler();
     void ShowNextFrame();
     void DrawRect();
+    /*DrawEllipse to be removed*/
     void DrawEllipse();
+    /*DrawAll to be removed*/
     void DrawAll();
     void ToggleDrawRect();
 
