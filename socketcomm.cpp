@@ -10,6 +10,7 @@ void SocketComm::connectToServer(QString host, qint16 port){
     inStream.setDevice(socket);
     connect(socket,SIGNAL(connected()),this,SLOT(onConnect()),Qt::DirectConnection);
     connect(socket,SIGNAL(disconnected()),this,SLOT(onDisconnect()),Qt::DirectConnection);
+    connect(socket, SIGNAL(readyRead()),this, SLOT(onReadReady()),Qt::DirectConnection);
     socket->connectToHost(host,port);
     socket->waitForConnected(2000);
 
@@ -37,5 +38,10 @@ void SocketComm::onDisconnect()
 }
 void SocketComm::onReadReady()
 {
+    qDebug() << "socket byteAvailable : " << socket->bytesAvailable();
+    QString searchString;
+    inStream>>searchString;
 
+
+    qDebug() <<"contents" <<socket->readAll();
 }

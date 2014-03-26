@@ -132,7 +132,8 @@ void MyGraphicsView::clickHandler()
     for(uint i = 0; i < items.size(); i++)
     {
         curRect = toRect(items[i]);
-        curStr = items[i]["name"];
+        curStr = QString::number(itrFramedata.key()) + " " + items[i]["name"] + "\n";
+
         if(curRect.contains(m_lastPos) && bDrawRect)
         {
             client->sendToServer(curStr);
@@ -235,10 +236,10 @@ void MyGraphicsView::setEllipse(bool val)
 
 void MyGraphicsView::ShowNextFrame()
 {
-        qDebug() << "timed up call show";
+
     if(itrBackgrounds == backgrounds.end() || itrFramedata == framedata.end())
         return ;
-    qDebug() << "timed up call show";
+
     itrBackgrounds++;
     itrFramedata++;
     if(itrBackgrounds == backgrounds.end() || itrFramedata == framedata.end())

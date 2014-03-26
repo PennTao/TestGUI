@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <sstream>
+#include <QDataStream>
+using namespace std;
 class SocketComm : public QObject
 {
     Q_OBJECT
