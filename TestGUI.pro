@@ -31,3 +31,6 @@ FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     panda_AP.jpg
+
+RESOURCES += \
+    Resources.qrc

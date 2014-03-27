@@ -9,8 +9,9 @@
 #include "mygraphicsview.h"
 #include "mygraphicsscene.h"
 #include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include <QGraphicsVideoItem>
-
+#include "xmldataparser.h"
 using namespace std;
 namespace Ui {
 class MainWindow;
@@ -29,12 +30,13 @@ private:
     MyGraphicsScene *cover_scene;
     QMediaPlayer *player;
     QGraphicsVideoItem *videoItem;
-
+    QMediaPlaylist *playlist;
     QPixmap *bgd;
 
     QGraphicsPixmapItem *item;
     vector <QRect> channelRect;
-
+    XMLDataParser* xmlparser;
+    QTimer *timer;
 protected:
 //    void mouseReleaseEvent(QMouseEvent *e);
 //    void mousePressEvent(QMouseEvent *e);
