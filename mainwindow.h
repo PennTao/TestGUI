@@ -37,6 +37,12 @@ private:
     vector <QRect> channelRect;
     XMLDataParser* xmlparser;
     QTimer *timer;
+
+    bool bTimer;
+    bool bPlayer;
+    QPushButton *ShowTag;
+    QPushButton *pauseresume;
+    QPushButton *ToggleFullScreen;
 protected:
 //    void mouseReleaseEvent(QMouseEvent *e);
 //    void mousePressEvent(QMouseEvent *e);
@@ -49,6 +55,8 @@ public:
 
 
 public slots:
+    void TogglePlay();
+    void ToggleFull();
 //    void drawRect();
 //    void drawEllipse();
 

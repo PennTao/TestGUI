@@ -9,14 +9,15 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "start";
 
     ui->setupUi(this);
+    bTimer = false;
+    bPlayer = false;
+    ShowTag = new QPushButton("ShowTag", this);
+    pauseresume = new QPushButton("Pause", this);
+    ToggleFullScreen = new QPushButton("Full Screen", this);
 
-    QPushButton *GroupOne = new QPushButton(tr("Group One"), this);
-    QPushButton *GroupTwo = new QPushButton(tr("Group Two"), this);
-    QPushButton *GroupThree = new QPushButton(tr("Group Three"), this);
-
-    ui->bottom_Hlayout->addWidget(GroupOne);
-    ui->bottom_Hlayout->addWidget(GroupTwo);
-    ui->bottom_Hlayout->addWidget(GroupThree);
+    ui->bottom_Hlayout->addWidget(ShowTag);
+    ui->bottom_Hlayout->addWidget(pauseresume);
+    ui->bottom_Hlayout->addWidget(ToggleFullScreen);
 
     player = new QMediaPlayer();
     videoItem = new QGraphicsVideoItem();
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     timer->setInterval(5000);
     timer->start();
+    bTimer = true;
     connect(timer, SIGNAL(timeout()), cover, SLOT(ShowNextFrame()));
 
     playlist = new QMediaPlaylist();
@@ -60,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cover->setSceneRect(scene->sceneRect());
 
     player->play();
-
+    bPlayer = true;
 //    qDebug() <<"after play";
 //    qDebug()<<"resolution"<<playlist->currentMedia().canonicalResource().resolution().height()<<" "<<playlist->currentMedia().canonicalResource().resolution().width();
 
@@ -70,7 +72,9 @@ MainWindow::MainWindow(QWidget *parent) :
   //  item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
   //  cover_scene->addPixmap(QPixmap("/home/tao/TestGUI/background.png").scaled(this->width(),this->height()));
   //  canvas->showFullScreen();
-    connect(GroupOne,SIGNAL(clicked()),cover, SLOT(ToggleDrawRect()));
+    connect(ShowTag,SIGNAL(clicked()),cover, SLOT(ToggleDrawRect()));
+    connect(pauseresume, SIGNAL(clicked()),this, SLOT(TogglePlay()));
+    connect(ToggleFullScreen, SIGNAL(clicked()),this,SLOT(ToggleFull()));
   //  connect(GroupTwo,SIGNAL(clicked()),cover, SLOT(DrawEllipse()));
   //  connect(GroupThree,SIGNAL(clicked()),canvas, SLOT(DrawAll()));
     connect(cover, SIGNAL(mouseClickEvent()), cover, SLOT(clickHandler()));
@@ -89,12 +93,41 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     canvas->setSceneRect(this->rect());
     videoItem->setSize(QSize(this->width(),this->height()));
     cover->setSceneRect(this->rect());
- //   cover->resize(canvas->size().width(),canvas->size().height());
- //   qDebug() <<"resized";
-//    cover_scene->setSceneRect(scene->sceneRect());
-//    cover->setBaseSize(canvas->size());
-//    cover_scene->addRect(cover_scene->sceneRect(),QPen(QColor(0,255,0),8));
-//    scene->addRect(scene->sceneRect(),QPen(QColor(255,255,0),8));
+
+}
+
+void MainWindow::TogglePlay()
+{
+    if(bPlayer)
+    {
+        player->pause();
+        pauseresume->setText("Resume");
+    }
+    else
+    {
+        player->play();
+        pauseresume->setText("Pause");
+    }
+    bPlayer = !bPlayer;
+    if(bTimer)
+    {timer->stop();}
+    else
+    {timer->start();}
+    bTimer = !bTimer;
+
+}
+void MainWindow::ToggleFull()
+{
+    if(this->isFullScreen())
+    {
+        this->showNormal();
+        ToggleFullScreen->setText("Full Screen");
+    }
+    else
+    {
+        this->showFullScreen();
+        ToggleFullScreen->setText("Exit Full Screen");
+    }
 }
 /*
 void MainWindow::drawRect()
