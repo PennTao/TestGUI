@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cover_scene = new MyGraphicsScene();
 
     xmlparser = new XMLDataParser();
-    xmlparser->loadXML(":/xml/test.xml");
+    xmlparser->loadXML(":/xml/RR.xml");
     xmlparser->parseXML();
     cover->setParser(xmlparser);
     timer = new QTimer(this);
@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), cover, SLOT(ShowNextFrame()));
 
     playlist = new QMediaPlaylist();
-    playlist->addMedia(QUrl::fromLocalFile(QString("/home/tao/TestGUI/tbbt-s04-e08.ts")));
+    playlist->addMedia(QUrl("http://158.130.12.16:3000/uploads/fullsize/RachaelRay.mp4"));
     //videoItem->showMaximized();
     player->setPlaylist(playlist);
 //    qDebug() <<"b4 play";

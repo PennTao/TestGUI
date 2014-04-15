@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/xml">
         <file>test.xml</file>
+        <file>RR.xml</file>
     </qresource>
 </RCC>

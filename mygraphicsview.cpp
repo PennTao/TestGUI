@@ -155,8 +155,15 @@ void MyGraphicsView::ShowNextFrame()
 
     curFrame = *itrFramedata;
     items = curFrame->GetAll();
-    QString curStr =  QString::number(itrFramedata.key());
-    client->sendToServer( curStr);
+    if(items.size() > 0){
+        QMap<QString,QString> item = items[0];
+        client->sendToServer( item["name"]);
+            DrawRect();
+    }
+//    QMap<QString,QString> item = items[0];
+//    qDebug() << items.size()<<""<<item["name"];
+//    QString curStr =  QString::number(itrFramedata.key());
+//    client->sendToServer( curStr);
     DrawRect();
     itrFramedata++;
 
