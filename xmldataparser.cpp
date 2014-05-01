@@ -86,3 +86,10 @@ QMap<QString, QString> XMLDataParser::parseItem(QXmlStreamReader &xmlReader)
     return item;
 
 }
+
+void XMLDataParser::loadnewxml(QMediaContent video)
+{
+    qDebug() << video.canonicalUrl().fileName().section(".",0,0);
+    this->loadXML(video.canonicalUrl().fileName().section(".",0,0) + QString(".xml"));
+    this->parseXML();
+}

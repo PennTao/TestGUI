@@ -157,7 +157,8 @@ void MyGraphicsView::ShowNextFrame()
     items = curFrame->GetAll();
     if(items.size() > 0){
         QMap<QString,QString> item = items[0];
-        client->sendToServer( item["name"]);
+        QString info = QString("msg:")+item["name"];
+        client->sendToServer(info);
             DrawRect();
     }
 //    QMap<QString,QString> item = items[0];

@@ -43,6 +43,8 @@ private:
     QPushButton *ShowTag;
     QPushButton *pauseresume;
     QPushButton *ToggleFullScreen;
+    QPushButton *next;
+    QPushButton *prev;
 protected:
 //    void mouseReleaseEvent(QMouseEvent *e);
 //    void mousePressEvent(QMouseEvent *e);
@@ -57,6 +59,7 @@ public:
 public slots:
     void TogglePlay();
     void ToggleFull();
+    void LoadNewXML(QMediaContent);
 //    void drawRect();
 //    void drawEllipse();
 

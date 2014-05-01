@@ -11,11 +11,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     bTimer = false;
     bPlayer = false;
-    ShowTag = new QPushButton("ShowTag", this);
+    //ShowTag = new QPushButton("ShowTag", this);
     pauseresume = new QPushButton("Pause", this);
     ToggleFullScreen = new QPushButton("Full Screen", this);
 
-    ui->bottom_Hlayout->addWidget(ShowTag);
+    prev = new QPushButton("Prev",this);
+    next = new QPushButton("Next", this);
+
+    ui->bottom_Hlayout->addWidget(prev);
+    ui->bottom_Hlayout->addWidget(next);
+    //ui->bottom_Hlayout->addWidget(ShowTag);
     ui->bottom_Hlayout->addWidget(pauseresume);
     ui->bottom_Hlayout->addWidget(ToggleFullScreen);
 
@@ -27,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cover_scene = new MyGraphicsScene();
 
     xmlparser = new XMLDataParser();
-    xmlparser->loadXML(":/xml/RR.xml");
+    xmlparser->loadXML(":/xml/RachaelRay.xml");
     xmlparser->parseXML();
     cover->setParser(xmlparser);
     timer = new QTimer(this);
@@ -37,9 +42,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), cover, SLOT(ShowNextFrame()));
 
     playlist = new QMediaPlaylist();
-    playlist->addMedia(QUrl("http://158.130.12.16:3000/uploads/fullsize/RachaelRay.mp4"));
+    playlist->addMedia(QUrl("http://158.130.12.47:3000/uploads/fullsize/RachaelRay.mp4"));
+    playlist->addMedia(QUrl("http://158.130.12.47:3000/uploads/fullsize/macys.mp4"));
     //videoItem->showMaximized();
     player->setPlaylist(playlist);
+
 //    qDebug() <<"b4 play";
 //    qDebug()<<"resolution"<<playlist->currentMedia().canonicalResource().resolution().height()<<" "<<playlist->currentMedia().canonicalResource().resolution().width();
     player->setVideoOutput(videoItem);
@@ -62,6 +69,11 @@ MainWindow::MainWindow(QWidget *parent) :
     cover->setSceneRect(scene->sceneRect());
 
     player->play();
+    if(player->isSeekable()){
+        qDebug()<<"seekable";
+    }else{
+        qDebug() << "not seekable";
+    }
     bPlayer = true;
 //    qDebug() <<"after play";
 //    qDebug()<<"resolution"<<playlist->currentMedia().canonicalResource().resolution().height()<<" "<<playlist->currentMedia().canonicalResource().resolution().width();
@@ -72,9 +84,13 @@ MainWindow::MainWindow(QWidget *parent) :
   //  item = new QGraphicsPixmapItem(QPixmap("/home/tao/Desktop/panda_AP.jpg").scaled(this->width(),this->height()));
   //  cover_scene->addPixmap(QPixmap("/home/tao/TestGUI/background.png").scaled(this->width(),this->height()));
   //  canvas->showFullScreen();
-    connect(ShowTag,SIGNAL(clicked()),cover, SLOT(ToggleDrawRect()));
+   // connect(ShowTag,SIGNAL(clicked()),cover, SLOT(ToggleDrawRect()));
+    connect(next,SIGNAL(clicked()),playlist,SLOT(next()));
+    connect(prev,SIGNAL(clicked()),playlist,SLOT(previous()));
+    connect(playlist,SIGNAL(currentMediaChanged(QMediaContent)),this,SLOT(LoadNewXML(QMediaContent)));
     connect(pauseresume, SIGNAL(clicked()),this, SLOT(TogglePlay()));
     connect(ToggleFullScreen, SIGNAL(clicked()),this,SLOT(ToggleFull()));
+
   //  connect(GroupTwo,SIGNAL(clicked()),cover, SLOT(DrawEllipse()));
   //  connect(GroupThree,SIGNAL(clicked()),canvas, SLOT(DrawAll()));
     connect(cover, SIGNAL(mouseClickEvent()), cover, SLOT(clickHandler()));
@@ -128,6 +144,15 @@ void MainWindow::ToggleFull()
         this->showFullScreen();
         ToggleFullScreen->setText("Exit Full Screen");
     }
+}
+
+void MainWindow::LoadNewXML(QMediaContent video)
+{
+    xmlparser->loadXML(":/xml/" + video.canonicalUrl().fileName().section(".",0,0) + ".xml");
+    xmlparser->parseXML();
+    cover->setParser(xmlparser);
+
+
 }
 /*
 void MainWindow::drawRect()

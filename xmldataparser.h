@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDebug>
 #include "frame.h"
+#include <QMediaPlaylist>
 
 class XMLDataParser : public QObject
 {
@@ -31,7 +32,7 @@ public:
 signals:
 
 public slots:
-
+    void loadnewxml(QMediaContent);
 };
 
 #endif // XMLDATAPARSER_H
