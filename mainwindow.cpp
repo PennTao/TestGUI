@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     xmlparser->loadXML(":/xml/RachaelRay.xml");
     xmlparser->parseXML();
     cover->setParser(xmlparser);
+    cover->sendToServerViaView("video:RachaelRay.mp4");
     timer = new QTimer(this);
     timer->setInterval(5000);
     timer->start();
@@ -148,10 +149,10 @@ void MainWindow::ToggleFull()
 
 void MainWindow::LoadNewXML(QMediaContent video)
 {
-    xmlparser->loadXML(":/xml/" + video.canonicalUrl().fileName().section(".",0,0) + ".xml");
+    xmlparser->loadXML(":/xml/" + video.canonicalUrl().fileName().section(".",0,0) + QString(".xml"));
     xmlparser->parseXML();
     cover->setParser(xmlparser);
-
+    cover->sendToServerViaView("video:" + video.canonicalUrl().fileName().section(".",0,0) + QString(".mp4"));
 
 }
 /*

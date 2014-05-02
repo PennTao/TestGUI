@@ -234,6 +234,10 @@ vector< pair<QRect, QString> > MyGraphicsView::getEllipses()
     return ellipses;
 }
 
+void MyGraphicsView::sendToServerViaView(QString msg)
+{
+    client->sendToServer(msg);
+}
 void MyGraphicsView::DrawEllipse()
 {
     QGraphicsScene *scene;

@@ -37,6 +37,7 @@ public:
     void setEllipse(bool);
     void setParser(XMLDataParser* );
     XMLDataParser* getParser();
+    void sendToServerViaView(QString msg);
 
 protected:
     void mouseReleaseEvent(QMouseEvent *e);

@@ -11,6 +11,7 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QGraphicsVideoItem>
+#include <QTimer>
 #include "xmldataparser.h"
 using namespace std;
 namespace Ui {
